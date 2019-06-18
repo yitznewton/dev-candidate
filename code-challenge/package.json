@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"description": "Retrium developer code challenge",
 	"scripts": {
-		"start": "node --require @babel/register src/server.js",
+		"start": "jasmine",
 		"test": "jasmine",
 		"lint": "eslint -c .eslintrc.js src"
 	},
