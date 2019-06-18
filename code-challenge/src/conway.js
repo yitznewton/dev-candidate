@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 exports.nextGeneration = (grid) => {
   return grid.map((row, x) => row.map((cellValue, y) => {
     const ns = neighborSum(grid, neighborCoordinates(grid, x, y));
@@ -6,29 +8,7 @@ exports.nextGeneration = (grid) => {
 };
 
 const neighborCoordinates = exports.neighborCoordinates = (grid, x, y) => {
-  const ret = [];
-  const gridHeight = grid.length;
-  const gridWidth = grid[0].length;
-
-  for (let i = x-1; i < x+2; i++) {
-    for (let j = y-1; j < y+2; j++) {
-      if (i < 0 || j < 0) {
-        continue;
-      }
-
-      if (i > gridHeight-1 || j > gridWidth-1) {
-        continue;
-      }
-
-      if (i === x && j === y) {
-        continue;
-      }
-
-      ret.push([i,j]);
-    }
-  }
-
-  return ret;
+  return nearbyCells(grid, x, y).filter(neighborFilter(grid, x, y));
 };
 
 const cellFate = exports.cellFate = (initialValue, neighborSum) => {
@@ -42,4 +22,27 @@ const cellFate = exports.cellFate = (initialValue, neighborSum) => {
 const neighborSum = (grid, neighborCoordinates) => {
   return neighborCoordinates.map(([x, y]) => grid[x][y])
     .reduce((cum, cur) => cum + cur, 0);
+};
+
+const nearbyCells = (grid, x, y) => {
+  return _(_.range(x-1, x+2)).flatMap(i => {
+    return _.range(y-1, y+2).map(j => [i,j]);
+  });
+};
+
+const neighborFilter = (grid, x, y) => {
+  const gridHeight = grid.length;
+  const gridWidth = grid[0].length;
+
+  return ([i,j]) => {
+    if (i < 0 || j < 0) {
+      return false;
+    }
+
+    if (i > gridHeight-1 || j > gridWidth-1) {
+      return false;
+    }
+
+    return i !== x || j !== y;
+  };
 };
