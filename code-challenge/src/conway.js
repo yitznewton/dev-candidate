@@ -33,10 +33,10 @@ const neighborCoordinates = exports.neighborCoordinates = (grid, x, y) => {
 
 const cellFate = exports.cellFate = (initialValue, neighborSum) => {
   if (initialValue === 0) {
-    return neighborSum === 3 ? 1 : 0;
+    return (neighborSum === 3) ? 1 : 0;
   }
 
-  return neighborSum > 1 && neighborSum < 3 ? 1 : 0;
+  return (neighborSum > 1 && neighborSum < 3) ? 1 : 0;
 };
 
 const neighborSum = (grid, neighborCoordinates) => {
