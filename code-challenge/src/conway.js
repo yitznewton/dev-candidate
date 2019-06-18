@@ -8,7 +8,7 @@ exports.nextGeneration = (grid) => {
 };
 
 const neighborCoordinates = exports.neighborCoordinates = (grid, x, y) => {
-  return nearbyCells(grid, x, y).filter(neighborFilter(grid, x, y));
+  return potentialNearbyCells(grid, x, y).filter(neighborFilter(grid, x, y));
 };
 
 const cellFate = exports.cellFate = (initialValue, neighborSum) => {
@@ -24,7 +24,7 @@ const neighborSum = (grid, neighborCoordinates) => {
     .reduce((cum, cur) => cum + cur, 0);
 };
 
-const nearbyCells = (grid, x, y) => {
+const potentialNearbyCells = (grid, x, y) => {
   return _(_.range(x-1, x+2)).flatMap(i => {
     return _.range(y-1, y+2).map(j => [i,j]);
   });
