@@ -1,4 +1,4 @@
-exports.conway = (grid) => {
+exports.nextGeneration = (grid) => {
   return grid.map((row, x) => row.map((cellValue, y) => {
     const ns = neighborSum(grid, neighborCoordinates(grid, x, y));
     return cellFate(cellValue, ns);
@@ -24,7 +24,7 @@ const neighborCoordinates = exports.neighborCoordinates = (grid, x, y) => {
         continue;
       }
 
-      ret.push([i,j]);      
+      ret.push([i,j]);
     }
   }
 

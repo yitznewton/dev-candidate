@@ -1,4 +1,4 @@
-const conway = require('../src/conway').conway;
+const conway = require('../src/conway').nextGeneration;
 
 describe("Conway's Game of Life", () => {
   describe('Blinker, period 2', () => {
