@@ -8,7 +8,10 @@ exports.nextGeneration = (grid) => {
 };
 
 const neighborCoordinates = exports.neighborCoordinates = (grid, x, y) => {
-  return potentialNearbyCells(grid, x, y).filter(neighborFilter(grid, x, y));
+  const gridHeight = grid.length;
+  const gridWidth = grid[0].length;
+
+  return potentialNearbyCells(grid, x, y).filter(neighborFilter(gridHeight, gridWidth, x, y));
 };
 
 const cellFate = exports.cellFate = (initialValue, neighborSum) => {
@@ -30,10 +33,7 @@ const potentialNearbyCells = (grid, x, y) => {
   });
 };
 
-const neighborFilter = (grid, x, y) => {
-  const gridHeight = grid.length;
-  const gridWidth = grid[0].length;
-
+const neighborFilter = (gridHeight, gridWidth, x, y) => {
   return ([i,j]) => {
     if (i < 0 || j < 0) {
       return false;
