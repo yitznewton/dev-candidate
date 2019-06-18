@@ -6,6 +6,7 @@ describe('neighbor coordinates', () => {
     [1,1,1,1,1],
     [1,1,1,1,1],
     [1,1,1,1,1],
+    [1,1,1,1,1],
     [1,1,1,1,1]
   ];
 
@@ -31,10 +32,10 @@ describe('neighbor coordinates', () => {
   });
 
   it('does not go beyond the max of the grid', () => {
-    expect(new Set(neighborCoordinates(grid, 4, 4))).toEqual(new Set([
+    expect(new Set(neighborCoordinates(grid, 5, 4))).toEqual(new Set([
+      [5,3],
       [4,3],
-      [3,3],
-      [3,4]
+      [4,4]
     ]));
   });
 });
