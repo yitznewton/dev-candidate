@@ -1,4 +1,6 @@
-const conway = require('../src/conway').nextGeneration;
+const _ = require('lodash');
+const jsc = require('jsverify');
+const nextGeneration = require('../src/conway').nextGeneration;
 
 describe("Conway's Game of Life", () => {
   describe('Blinker, period 2', () => {
@@ -19,11 +21,11 @@ describe("Conway's Game of Life", () => {
     ];
 
     it('generates expected second state', () => {
-      expect(conway(initialState)).toEqual(alternateState);
+      expect(nextGeneration(initialState)).toEqual(alternateState);
     });
 
     it('oscillates back to initial state', () => {
-      expect(conway(conway(initialState))).toEqual(initialState);
+      expect(nextGeneration(nextGeneration(initialState))).toEqual(initialState);
     });
   });
 
@@ -47,11 +49,25 @@ describe("Conway's Game of Life", () => {
     ];
 
     it('generates expected second state', () => {
-      expect(conway(initialState)).toEqual(alternateState);
+      expect(nextGeneration(initialState)).toEqual(alternateState);
     });
 
     it('oscillates back to initial state', () => {
-      expect(conway(conway(initialState))).toEqual(initialState);
+      expect(nextGeneration(nextGeneration(initialState))).toEqual(initialState);
+    });
+  });
+
+  describe('properties', () => {
+    it('is composed of cells containing only 0 or 1', () => {
+      const allCellsContainZeroOrOne = jsc.forall(
+        'nearray (nearray (integer 0 1))',
+        initialGrid => {
+          const finalGrid = nextGeneration(nextGeneration(nextGeneration(nextGeneration(initialGrid))));
+          return _(finalGrid).flatten().every(cellValue => cellValue === 0 || cellValue === 1);
+        }
+      );
+
+      jsc.assert(allCellsContainZeroOrOne);
     });
   });
 });
