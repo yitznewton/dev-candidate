@@ -1,17 +1,41 @@
 const _ = require('lodash');
 
-exports.nextGeneration = (grid) => {
-  return grid.map((row, x) => row.map((cellValue, y) => {
-    const ns = neighborSum(grid, neighborCoordinates(grid, x, y));
-    return cellFate(cellValue, ns);
-  }));
+exports.nextGeneration = (liveCensus) => {
+  const grid = gridToTest(liveCensus);
+
+  return _(grid.x).flatMap(x => grid.y.map(y => {
+    const ns = neighborSum(liveCensus, neighborCoordinates(x, y));
+    return [[x,y], cellFate(cellValue(liveCensus, x, y), ns)];
+  })).filter(([coords, fate]) => fate === 1).reduce((cum, [[xx,yy]]) => {
+    addLiveCell(cum, xx, yy);
+    return cum;
+  }, {});
 };
 
-const neighborCoordinates = exports.neighborCoordinates = (grid, x, y) => {
-  const gridHeight = grid.length;
-  const gridWidth = grid[0].length;
+const gridToTest = exports.gridToTest = (liveCensus) => {
+  const yCoords = Object.keys(liveCensus).map(x => parseInt(x));
+  const xCoords = _(Object.values(liveCensus)).flatten().value();
 
-  return potentialNearbyCells(grid, x, y).filter(neighborFilter(gridHeight, gridWidth, x, y));
+  return {
+    x: _.range(Math.min(...xCoords) - 1, Math.max(...xCoords) + 2),
+    y: _.range(Math.min(...yCoords) - 1, Math.max(...yCoords) + 2)
+  };
+};
+
+const neighborSum = (liveCensus, neighborCoordinates) => {
+  return neighborCoordinates.map(([x,y]) => {
+    return (_(liveCensus[x]).includes(y)) ? 1 : 0;
+  }).reduce((cum, cur) => cum + cur);
+};
+
+const neighborCoordinates = exports.neighborCoordinatesB = (x, y) => {
+  return potentialNearbyCells(x, y).filter(([i,j]) => i !== x || j !== y);
+};
+
+const potentialNearbyCells = (x, y) => {
+  return _(_.range(x-1, x+2)).flatMap(i => {
+    return _.range(y-1, y+2).map(j => [i,j]);
+  });
 };
 
 const cellFate = exports.cellFate = (initialValue, neighborSum) => {
@@ -22,27 +46,14 @@ const cellFate = exports.cellFate = (initialValue, neighborSum) => {
   return (neighborSum > 1 && neighborSum < 3) ? 1 : 0;
 };
 
-const neighborSum = (grid, neighborCoordinates) => {
-  return neighborCoordinates.map(([x, y]) => grid[x][y])
-    .reduce((cum, cur) => cum + cur, 0);
+const cellValue = (liveCensus, x, y) => {
+  return (_(liveCensus[x]).includes(y)) ? 1 : 0;
 };
 
-const potentialNearbyCells = (grid, x, y) => {
-  return _(_.range(x-1, x+2)).flatMap(i => {
-    return _.range(y-1, y+2).map(j => [i,j]);
-  });
-};
+const addLiveCell = (liveCensus, x, y) => {
+  if (typeof liveCensus[x] === 'undefined') {
+    liveCensus[x] = [];
+  }
 
-const neighborFilter = (gridHeight, gridWidth, x, y) => {
-  return ([i,j]) => {
-    if (i < 0 || j < 0) {
-      return false;
-    }
-
-    if (i > gridHeight-1 || j > gridWidth-1) {
-      return false;
-    }
-
-    return i !== x || j !== y;
-  };
+  liveCensus[x].push(y);
 };
