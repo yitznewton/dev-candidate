@@ -5,7 +5,7 @@
 	"scripts": {
 		"start": "jasmine",
 		"test": "jasmine",
-		"lint": "eslint -c .eslintrc.js src"
+		"lint": "eslint src"
 	},
 	"repository": {
 		"type": "git",
