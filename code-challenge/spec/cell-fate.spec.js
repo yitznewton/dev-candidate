@@ -14,8 +14,14 @@ describe('cell fate', () => {
   });
 
   describe('live cell with three live neighbors', () => {
+    it('lives', () => {
+      expect(cellFate(1, 3)).toEqual(1);
+    });
+  });
+
+  describe('live cell with more than three live neighbors', () => {
     it('dies', () => {
-      expect(cellFate(1, 3)).toEqual(0);
+      expect(cellFate(1, 4)).toEqual(0);
     });
   });
 

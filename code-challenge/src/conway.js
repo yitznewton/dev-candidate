@@ -43,7 +43,7 @@ const cellFate = exports.cellFate = (initialValue, neighborSum) => {
     return (neighborSum === 3) ? 1 : 0;
   }
 
-  return (neighborSum > 1 && neighborSum < 3) ? 1 : 0;
+  return (neighborSum > 1 && neighborSum < 4) ? 1 : 0;
 };
 
 const cellValue = (liveCensus, x, y) => {
